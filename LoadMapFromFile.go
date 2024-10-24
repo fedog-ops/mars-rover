@@ -6,10 +6,6 @@ import (
 	"os"
 )
 
-type Coordinates2 struct {
-	X, Y int `json:"x",json:"y"`
-}
-
 type MapJSON struct {
 	Width     int         `json:"width"`
 	Height    int         `json:"height"`
