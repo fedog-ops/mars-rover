@@ -9,9 +9,9 @@ type Rover struct {
 	Output    func(string)
 }
 
-func (r *Rover) Interpret(command rune) {
+func (r *Rover) Interpret(commands string) {
+	for _, command := range commands {
 	var newX, newY int
-
 	switch command {
 	case 'f':
 		newX, newY = r.FutureLocation(1)
@@ -21,15 +21,19 @@ func (r *Rover) Interpret(command rune) {
 		r.Turn('l')
 	case 'r':
 		r.Turn('r')
-	}
-
+	} 
+	
 	if r.PlanetMap.IsObstacle(newX, newY) {
 		r.Output(fmt.Sprintf("You hit rock at coordinates (%d, %d)", newX, newY))
 		return
 	}
+
 	r.X, r.Y = newX, newY
 	r.Output(fmt.Sprintf("New location: (%d, %d)", r.X, r.Y))
+	}
+
 }
+
 
 func (r *Rover) FutureLocation(distance int) (int, int) {
 	switch r.Direction {

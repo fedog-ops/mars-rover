@@ -39,7 +39,7 @@ func TestLoadingMap(t *testing.T) {
 func TestRoverMoveForwardNorth(t *testing.T) {
 	rover := mars_rover.NewRover(0, 0, 'N', emptyplanet)
 
-	rover.Interpret('f')
+	rover.Interpret("f")
 	if rover.X != 0 || rover.Y != 1 {
 		t.Fatalf("Expected (0, 1, N), got (%d, %d, %c)", rover.X, rover.Y, rover.Direction)
 	}
@@ -47,21 +47,21 @@ func TestRoverMoveForwardNorth(t *testing.T) {
 func TestRoverMoveForwardEast(t *testing.T) {
 	rover := mars_rover.NewRover(0, 0, 'E', emptyplanet)
 
-	rover.Interpret('f')
+	rover.Interpret("f")
 	if rover.X != 1 || rover.Y != 0 || rover.Direction != 'E' {
 		t.Fatalf("Expected (1, 0, E), got (%d, %d, %c)", rover.X, rover.Y, rover.Direction)
 	}
 }
 func TestRoverMoveBackwardNorth(t *testing.T) {
 	rover := mars_rover.NewRover(5, 5, 'N', emptyplanet)
-	rover.Interpret('b')
+	rover.Interpret("b")
 	if rover.X != 5 || rover.Y != 4 {
 		t.Fatalf("Expected (5, 4, N), got (%d, %d, %c)", rover.X, rover.Y, rover.Direction)
 	}
 }
 func TestRoverMoveBackwardSouth(t *testing.T) {
 	rover := mars_rover.NewRover(5, 5, 'S', emptyplanet)
-	rover.Interpret('b')
+	rover.Interpret("b")
 	if rover.X != 5 || rover.Y != 6 {
 		t.Fatalf("Expected (5, 6, S), got (%d, %d, %c)", rover.X, rover.Y, rover.Direction)
 	}
@@ -69,21 +69,21 @@ func TestRoverMoveBackwardSouth(t *testing.T) {
 
 func TestRoverMovesLeft(t *testing.T) {
 	rover := mars_rover.NewRover(5, 5, 'N', emptyplanet)
-	rover.Interpret('l')
+	rover.Interpret("l")
 	if rover.Direction != 'W' {
 		t.Fatalf("Expected (5, 5, W), got (%d, %d, %c)", rover.X, rover.Y, rover.Direction)
 	}
 }
 func TestRoverMovesRight(t *testing.T) {
 	rover := mars_rover.NewRover(2, 3, 'E', emptyplanet)
-	rover.Interpret('r')
+	rover.Interpret("r")
 	if rover.Direction != 'S' {
 		t.Fatalf("Expected (2, 3, S), got (%d, %d, %c)", rover.X, rover.Y, rover.Direction)
 	}
 }
 func TestHittingObject(t *testing.T){
 	rover := mars_rover.NewRover(3, 3, 'N', planet)
-	rover.Interpret('f')
+	rover.Interpret("fbr")
 	if  rover.X != 3 || rover.Y != 3 || rover.Direction != 'N' {
 		t.Fatalf("Expected rock message and (3, 3, N), got (%d, %d, %c)", rover.X, rover.Y, rover.Direction)
 	}}
