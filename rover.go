@@ -1,41 +1,49 @@
 package mars_rover
 
+import "fmt"
+
 type Rover struct {
 	X, Y      int
 	Direction rune
 	PlanetMap *Map
+	Output    func(string)
 }
 
 func (r *Rover) Interpret(command rune) {
+	var newX, newY int
+
 	switch command {
 	case 'f':
-		//distance := 1
-		r.Move(1)
+		newX, newY = r.FutureLocation(1)
 	case 'b':
-		r.Move(-1)
+		newX, newY = r.FutureLocation(-1)
 	case 'l':
 		r.Turn('l')
 	case 'r':
 		r.Turn('r')
 	}
+
+	if r.PlanetMap.IsObstacle(newX, newY) {
+		r.Output(fmt.Sprintf("You hit rock at coordinates (%d, %d)", newX, newY))
+		return
+	}
+	r.X, r.Y = newX, newY
+	r.Output(fmt.Sprintf("New location: (%d, %d)", r.X, r.Y))
 }
 
-func (r *Rover) Move(distance int) {
+func (r *Rover) FutureLocation(distance int) (int, int) {
 	switch r.Direction {
 	case 'N':
-		r.Y += distance
+		return r.X, r.Y + distance
 	case 'S':
-		r.Y -= distance
+		return r.X, r.Y - distance
 	case 'E':
-		r.X += distance
+		return r.X + distance, r.Y
 	case 'W':
-		r.X -= distance
+		return r.X - distance, r.Y
 	}
 
-	//if new X,Y == obstacle
-	//return	'can't move there' + last coord
-
-	//goes off map
+	return r.X, r.Y
 }
 
 func (r *Rover) Turn(direction rune) {
@@ -71,5 +79,8 @@ func NewRover(x int, y int, direction rune, m *Map) *Rover {
 		Y:         y,
 		Direction: direction,
 		PlanetMap: m,
+		Output: func(message string) {
+			fmt.Println(message)
+		},
 	}
 }
