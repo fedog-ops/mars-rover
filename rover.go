@@ -80,7 +80,7 @@ func NewRover(x int, y int, direction rune, m *Map) *Rover {
 		Direction: direction,
 		PlanetMap: m,
 		Output: func(message string) {
-			fmt.Println(message) // For console or log output
+			fmt.Println(message)
 		},
 	}
 }
