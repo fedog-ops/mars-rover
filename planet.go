@@ -8,6 +8,14 @@ type Map struct {
 	Width, Height int
 	Obstacles []Coordinates
 }
+func (m *Map) IsObstacle(x,y int) bool {
+	for _ , obstactle := range m.Obstacles {
+		if obstactle.X == x && obstactle.Y == y {
+			return true 
+		}
+	}
+	return false
+} 
 
 func ExampleMap() *Map {
 	obstacles := []Coordinates{
