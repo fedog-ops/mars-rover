@@ -3,7 +3,6 @@ package mars_rover
 import (
 	"mars_rover"
 	"testing"
-	
 )
 var emptyplanet *mars_rover.Map
 var planet *mars_rover.Map
@@ -88,12 +87,6 @@ func TestHittingObject(t *testing.T){
 	if  rover.X != 3 || rover.Y != 3 || rover.Direction != 'N' {
 		t.Fatalf("Expected rock message and (3, 3, N), got (%d, %d, %c)", rover.X, rover.Y, rover.Direction)
 	}}
-	//repsonse, err := rover.output()
-// 	if err != nil {
-// 		t.Fatalf("Response error : %e", err)
-// 	}else if  rover.X != 3 || rover.Y != 3 || rover.Direction != 'N' {
-// 		t.Fatalf("Expected rock message and (3, 3, N), got (%d, %d, %c)", rover.X, rover.Y, rover.Direction)
-// 	}
-// }
+
 //multiple commands
 //obstactle
