@@ -1,10 +1,12 @@
 package mars_rover
 
-import "fmt"
+import (
+	"fmt"
+)
 
 type Rover struct {
-	Position  Position
-	PlanetMap *Map
+	Position   Position
+	PlanetMap  *Map
 	obstructed bool
 }
 type Position struct {
@@ -13,7 +15,7 @@ type Position struct {
 	D string
 }
 
-func (r *Rover) Command(commands string) {
+func (r *Rover) Command(commands string) error {
 	for _, command := range commands {
 		var newX, newY int
 		switch command {
@@ -27,19 +29,22 @@ func (r *Rover) Command(commands string) {
 		case 'r':
 			r.Turn("r")
 			newX, newY = r.Position.X, r.Position.Y
+		default:
+			return fmt.Errorf("invalid command: %c", command)
 		}
 
 		if r.PlanetMap.IsObstacle(newX, newY) {
-			r.obstructed= true
-			r.Output()
-			return
+			r.obstructed = true
+			r.Report()
+			return nil
 		}
 
-		r.Position.X, r.Position.Y = r.PlanetMap.WrapCoordinates(newX, newY) 
+		r.Position.X, r.Position.Y = r.PlanetMap.WrapCoordinates(newX, newY)
 		r.obstructed = false
-		r.Output()
-	}
+		r.Report()
 
+	}
+	return nil
 }
 
 func (r *Rover) FutureLocation(distance int) (int, int) {
@@ -88,17 +93,17 @@ func (r *Rover) AbortJourney() {
 }
 func (r *Rover) GetPosition() Position { return r.Position }
 
-func (r *Rover) Output() string { 
+func (r *Rover) Report() string {
 	if r.obstructed {
 		return fmt.Sprintf("Obstacle encountered! Current coordinates : (%+v)", r.Position)
-	} 
+	}
 	return fmt.Sprintf("New location: (%+v)", r.Position)
 }
 
 func NewRover(p *Position, m *Map) *Rover {
 	return &Rover{
-		Position:  *p,
-		PlanetMap: m,
+		Position:   *p,
+		PlanetMap:  m,
 		obstructed: false,
 	}
 }
