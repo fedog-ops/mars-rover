@@ -3,88 +3,91 @@ package mars_rover
 import "fmt"
 
 type Rover struct {
-	X, Y      int
-	Direction rune
+	Position  Position
 	PlanetMap *Map
-	Output    func(string)
+}
+type Position struct {
+	X int
+	Y int
+	D string
 }
 
-func (r *Rover) Interpret(commands string) {
+func (r *Rover) Command(commands string) {
 	for _, command := range commands {
-	var newX, newY int
-	switch command {
-	case 'f':
-		newX, newY = r.FutureLocation(1)
-	case 'b':
-		newX, newY = r.FutureLocation(-1)
-	case 'l':
-		r.Turn('l')
-	case 'r':
-		r.Turn('r')
-	} 
-	
-	if r.PlanetMap.IsObstacle(newX, newY) {
-		r.Output(fmt.Sprintf("You hit rock at coordinates (%d, %d)", newX, newY))
-		return
-	}
+		var newX, newY int
+		switch command {
+		case 'f':
+			newX, newY = r.FutureLocation(1)
+		case 'b':
+			newX, newY = r.FutureLocation(-1)
+		case 'l':
+			r.Turn("l")
+			newX, newY = r.Position.X, r.Position.Y
+		case 'r':
+			r.Turn("r")
+			newX, newY = r.Position.X, r.Position.Y
+		}
 
-	r.X, r.Y = newX, newY
-	r.Output(fmt.Sprintf("New location: (%d, %d)", r.X, r.Y))
+		if r.PlanetMap.IsObstacle(newX, newY) {
+			r.Output(fmt.Sprintf("You hit rock at coordinates (%d, %d)", newX, newY))
+			return
+		}
+
+		r.Position.X, r.Position.Y = newX, newY
+		r.Output(fmt.Sprintf("New location: (%d, %d)", r.Position.X, r.Position.Y))
 	}
 
 }
-
 
 func (r *Rover) FutureLocation(distance int) (int, int) {
-	switch r.Direction {
-	case 'N':
-		return r.X, r.Y + distance
-	case 'S':
-		return r.X, r.Y - distance
-	case 'E':
-		return r.X + distance, r.Y
-	case 'W':
-		return r.X - distance, r.Y
+	switch r.Position.D {
+	case "N":
+		return r.Position.X, r.Position.Y + distance
+	case "S":
+		return r.Position.X, r.Position.Y - distance
+	case "E":
+		return r.Position.X + distance, r.Position.Y
+	case "W":
+		return r.Position.X - distance, r.Position.Y
 	}
 
-	return r.X, r.Y
+	return r.Position.X, r.Position.Y
 }
 
-func (r *Rover) Turn(direction rune) {
+func (r *Rover) Turn(direction string) {
 	switch direction {
-	case 'l':
-		switch r.Direction {
-		case 'N':
-			r.Direction = 'W'
-		case 'E':
-			r.Direction = 'N'
-		case 'S':
-			r.Direction = 'E'
-		case 'W':
-			r.Direction = 'S'
+	case "l":
+		switch r.Position.D {
+		case "N":
+			r.Position.D = "W"
+		case "E":
+			r.Position.D = "N"
+		case "S":
+			r.Position.D = "E"
+		case "W":
+			r.Position.D = "S"
 		}
-	case 'r':
-		switch r.Direction {
-		case 'N':
-			r.Direction = 'E'
-		case 'E':
-			r.Direction = 'S'
-		case 'S':
-			r.Direction = 'W'
-		case 'W':
-			r.Direction = 'N'
+	case "r":
+		switch r.Position.D {
+		case "N":
+			r.Position.D = "E"
+		case "E":
+			r.Position.D = "S"
+		case "S":
+			r.Position.D = "W"
+		case "W":
+			r.Position.D = "N"
 		}
 	}
 }
 
-func NewRover(x int, y int, direction rune, m *Map) *Rover {
+func (r *Rover) GetPosition() Position { return r.Position }
+
+func (r *Rover) Output(message string) { fmt.Println(message) }
+
+func NewRover(p *Position, m *Map) *Rover {
 	return &Rover{
-		X:         x,
-		Y:         y,
-		Direction: direction,
+		Position:  *p,
 		PlanetMap: m,
-		Output: func(message string) {
-			fmt.Println(message)
-		},
 	}
 }
