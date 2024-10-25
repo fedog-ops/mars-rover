@@ -5,6 +5,7 @@ import "fmt"
 type Rover struct {
 	Position  Position
 	PlanetMap *Map
+	obstructed bool
 }
 type Position struct {
 	X int
@@ -29,12 +30,14 @@ func (r *Rover) Command(commands string) {
 		}
 
 		if r.PlanetMap.IsObstacle(newX, newY) {
-			r.Output(fmt.Sprintf("You hit rock at coordinates (%d, %d)", newX, newY))
+			r.obstructed= true
+			r.Output()
 			return
 		}
 
 		r.Position.X, r.Position.Y = newX, newY
-		r.Output(fmt.Sprintf("New location: (%d, %d)", r.Position.X, r.Position.Y))
+		r.obstructed = false
+		r.Output()
 	}
 
 }
@@ -80,14 +83,22 @@ func (r *Rover) Turn(direction string) {
 		}
 	}
 }
+func (r *Rover) AbortJourney() {
 
+}
 func (r *Rover) GetPosition() Position { return r.Position }
 
-func (r *Rover) Output(message string) { fmt.Println(message) }
+func (r *Rover) Output() string { 
+	if r.obstructed {
+		return fmt.Sprintf("Obstacle encountered! Current coordinates : (%+v)", r.Position)
+	} 
+	return fmt.Sprintf("New location: (%+v)", r.Position)
+}
 
 func NewRover(p *Position, m *Map) *Rover {
 	return &Rover{
 		Position:  *p,
 		PlanetMap: m,
+		obstructed: false,
 	}
 }

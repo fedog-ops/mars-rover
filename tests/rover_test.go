@@ -22,7 +22,7 @@ func TestMain(m *testing.M) {
 	m.Run()
 }
 
-func TestEaxmapleMap(t *testing.T) {
+func TestLoadingExampleMap(t *testing.T) {
 
 	stubMap := mars_rover.ExampleMap()
 	start := mars_rover.Position{X: 0, Y: 1, D: "N"}
@@ -32,7 +32,7 @@ func TestEaxmapleMap(t *testing.T) {
 		t.Fatalf("Expected (0, 0, N), got (%+v)", start)
 	}
 }
-func TestRoverMoveForwardNorth(t *testing.T) {
+func TestRoverCanMoveForwardNorthFacing(t *testing.T) {
 	start := mars_rover.Position{X: 0, Y: 1, D: "N"}
 	rover := mars_rover.NewRover(&start, emptyplanet)
 
@@ -58,7 +58,7 @@ func TestRoverMoveForwardEastFacing(t *testing.T) {
 	}
 }
 
-func TestRoverMoveBackwardNorth(t *testing.T) {
+func TestRoverCanMoveBackwardNorthFacing(t *testing.T) {
 	start := mars_rover.Position{X: 5, Y: 5, D: "N"}
 	rover := mars_rover.NewRover(&start, emptyplanet)
 	rover.Command("b")
@@ -68,7 +68,7 @@ func TestRoverMoveBackwardNorth(t *testing.T) {
 		t.Fatalf("Expected %+v) , got %+v ", expected, actual)
 	}
 }
-func TestRoverMoveBackwardSouth(t *testing.T) {
+func TestRoverCanMoveBackwardSouthFacing(t *testing.T) {
 
 	start := mars_rover.Position{X: 5, Y: 5, D: "S"}
 	rover := mars_rover.NewRover(&start, emptyplanet)
@@ -80,7 +80,7 @@ func TestRoverMoveBackwardSouth(t *testing.T) {
 	}
 }
 
-func TestRoverMovesLeft(t *testing.T) {
+func TestRoverCanMoveLeft(t *testing.T) {
 	start := mars_rover.Position{X: 5, Y: 5, D: "N"}
 	rover := mars_rover.NewRover(&start, emptyplanet)
 	rover.Command("l")
@@ -90,7 +90,7 @@ func TestRoverMovesLeft(t *testing.T) {
 		t.Fatalf("Expected %+v) , got %+v ", expected, actual)
 	}
 }
-func TestRoverMovesRight(t *testing.T) {
+func TestRoverCanMoveRight(t *testing.T) {
 	start := mars_rover.Position{X: 5, Y: 5, D: "N"}
 	rover := mars_rover.NewRover(&start, emptyplanet)
 	rover.Command("r")
@@ -100,11 +100,44 @@ func TestRoverMovesRight(t *testing.T) {
 		t.Fatalf("Expected %+v) , got %+v ", expected, actual)
 	}
 }
-func TestDoesntDriveThroughObstacle(t *testing.T) {
+func TestRoverShouldNotDriveThroughObstacle(t *testing.T) {
 
 	start := mars_rover.Position{X: 3, Y: 3, D: "N"}
-	rover := mars_rover.NewRover(&start, emptyplanet)
+	rover := mars_rover.NewRover(&start, planet)
 	rover.Command("f")
+	actual := rover.GetPosition()
+	expected := mars_rover.Position{X: 3, Y: 3, D: "N"}
+	if actual != expected {
+		t.Fatalf("Expected %+v) , got %+v ", expected, actual)
+	}
+}
+func TestReportMsgWhenObstacleObstructing(t *testing.T) {
+
+	start := mars_rover.Position{X: 3, Y: 3, D: "N"}
+	rover := mars_rover.NewRover(&start, planet)
+	rover.Command("f")
+	actual := rover.Output()
+	expected := "Obstacle encountered! Current coordinates : ({X:3 Y:3 D:N})"
+	if actual != expected {
+		t.Fatalf("Expected %+v) , got %+v ", expected, actual)
+	}
+}
+func TestRoverCanHandleMultipleCommands(t *testing.T) {
+
+	start := mars_rover.Position{X: 0, Y: 0, D: "N"}
+	rover := mars_rover.NewRover(&start, planet)
+	rover.Command("fffrff")
+	actual := rover.GetPosition()
+	expected := mars_rover.Position{X: 2, Y: 3, D: "E"}
+	if actual != expected {
+		t.Fatalf("Expected %+v) , got %+v ", expected, actual)
+	}
+}
+func TestRoverCanStopInFrontOfObstacleafterMultipleCommands(t *testing.T) {
+
+	start := mars_rover.Position{X: 0, Y: 0, D: "N"}
+	rover := mars_rover.NewRover(&start, planet)
+	rover.Command("rffflfffffff")
 	actual := rover.GetPosition()
 	expected := mars_rover.Position{X: 3, Y: 3, D: "N"}
 	if actual != expected {
