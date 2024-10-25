@@ -17,6 +17,20 @@ func (m *Map) IsObstacle(x, y int) bool {
 	}
 	return false
 }
+func (m *Map) WrapCoordinates(x, y int) (int, int) {
+	if x < 0 {
+		x = m.Width - 1
+	} else if x >= m.Width {
+		x = 0
+	}
+	if y < 0 {
+		y = m.Height - 1
+	} else if y >= m.Height {
+		y = 0
+	}
+	return x, y
+}
+
 
 func ExampleMap() *Map {
 	obstacles := []Coordinates{

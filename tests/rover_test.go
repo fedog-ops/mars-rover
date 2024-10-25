@@ -144,3 +144,15 @@ func TestRoverCanStopInFrontOfObstacleafterMultipleCommands(t *testing.T) {
 		t.Fatalf("Expected %+v) , got %+v ", expected, actual)
 	}
 }
+
+func TestRoverSurviesDrivingOffTheEdgeOfThePlanet(t *testing.T) {
+
+	start := mars_rover.Position{X: 0, Y: 0, D: "N"}
+	rover := mars_rover.NewRover(&start, planet)
+	rover.Command("lffff")
+	actual := rover.GetPosition()
+	expected := mars_rover.Position{X: 6, Y: 0, D: "W"}
+	if actual != expected {
+		t.Fatalf("Expected %+v) , got %+v ", expected, actual)
+	}
+}

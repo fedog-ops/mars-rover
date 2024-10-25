@@ -35,7 +35,7 @@ func (r *Rover) Command(commands string) {
 			return
 		}
 
-		r.Position.X, r.Position.Y = newX, newY
+		r.Position.X, r.Position.Y = r.PlanetMap.WrapCoordinates(newX, newY) 
 		r.obstructed = false
 		r.Output()
 	}
